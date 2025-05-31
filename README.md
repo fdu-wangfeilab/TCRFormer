@@ -6,7 +6,7 @@ TCRFormer: a Pretrained Model with Priori knowledge for T-Cell Receptor
 
 
 ## Tutorial
-We show how to pretrain TCRFormer in [pretrain/HowToPretrain.ipynb](./pretrain/HowToPretrain.ipynb). And You can also directly utilize the pre-trained models TCRFormer, IgFold, and T5 to extract TCR's sequence embedding, TCR's structural embedding, and epitope's embedding, respectively[get_embedding/test.ipynb](./get_embedding/test.ipynb). Once the relevant embedding have been extracted, you can proceed with downstream tasks[downstream task/predict/train/](./downstream task/predict/train/), ultimately leading to the final prediction results[downstream task/predict/](./downstream task/predict/).
+We show how to pretrain TCRFormer in [pretrain/HowToPretrain.ipynb](./pretrain/HowToPretrain.ipynb). And You can also directly utilize the pre-trained models TCRFormer, IgFold, and T5 to extract TCR's sequence embedding, TCR's structural embedding, and epitope's embedding, respectively [get_embedding/test.ipynb](./get_embedding/test.ipynb). Once the relevant embedding have been extracted, you can proceed with downstream tasks [downstream task/predict/train/](./downstream_task/predict/train/), ultimately leading to the final prediction results[downstream task/predict/](./downstream_task/predict/).
 
 ## Requirements
 To execute the code, make sure to install the required packages listed below.
