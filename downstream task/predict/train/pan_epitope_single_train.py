@@ -1,0 +1,41 @@
+import os,sys
+b_directory = os.path.abspath(os.path.join(os.getcwd(), '..', '..', 'model'))
+sys.path.insert(0, b_directory)
+from pan_epitope_single import *
+b_directory = os.path.abspath(os.path.join(os.getcwd(), '..', '..', 'utils'))
+sys.path.insert(0, b_directory)
+from pan_epitope_single_train_util import *
+
+import numpy as np
+import pandas as pd
+import torch,random
+from sklearn.metrics import (
+    average_precision_score,
+    roc_auc_score
+)
+import warnings
+warnings.filterwarnings("ignore")
+
+import argparse
+
+def main():
+    parser = argparse.ArgumentParser()
+
+    
+    parser.add_argument('--beta_train_emb_path', type=str, required=True)
+    parser.add_argument('--ep_train_emb_path', type=str, required=True)
+    parser.add_argument('--train_health_tcr_emb_path', type=str, required=True)
+    parser.add_argument('--seed', type=int, default=1)
+    parser.add_argument('--lr', type=float, default=0.0001)
+    parser.add_argument('--EPOCH', type=int, default=20)
+    parser.add_argument('--BATCH_SIZE', type=int, default=64)
+    parser.add_argument('--device', type=str, default='cuda:0')
+    parser.add_argument('--save_path', type=str, default='./model.pt')
+
+    args = parser.parse_args()
+
+    cal_(args.beta_train_emb_path,args.ep_train_emb_path,args.train_health_tcr_emb_path,args.seed,
+         args.lr,args.EPOCH,args.BATCH_SIZE,args.device,args.save_path)
+
+
+main()
