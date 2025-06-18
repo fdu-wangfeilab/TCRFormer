@@ -80,7 +80,7 @@ def get_ep_emb(eps_data, pretrain_path='/path/prot_t5_xl_half_uniref50-enc/', de
 ## Obtain three types of embeddings.
 ### Obtain the sequence embedding from TCRFormer
 Using the two functions get_betaseq_emb and get_alphaseq_emb in get_TCRseq_emb.py.
-The get_betaseq_emb is used to generate TCR beta chain embeddings from a tab-separated input file containing T-cell receptor sequence and gene segment information. The function processes the sequences and gene annotations, passes them through a pretrained deep learning model, and saves the resulting embeddings to a file.
+The get_betaseq_emb is used to generate TCR beta chain embeddings from a tab-separated input file containing T-cell receptor sequence and gene segment information. The function processes the sequences and gene annotations, passes them through TCRFormer, and saves the resulting embeddings to a file.
 Required Inputs:
 + read_path: path to the input .tsv or .csv file containing TCR beta chain data.
 + save_path: path to save the output .npy file containing embeddings.
@@ -102,7 +102,7 @@ get_betaseq_emb(
     device='cuda:0'
 )
 ```
-The get_alphaseq_emb is used to extract TCR alpha chain embeddings from a similar structured input file. This function also reads sequences and gene segments, tokenizes and encodes them, runs them through a pretrained alpha model, and saves the output embeddings.
+The get_alphaseq_emb is used to extract TCR alpha chain embeddings from a similar structured input file. This function also reads sequences and gene segments, tokenizes and encodes them, runs them through TCRFormer, and saves the output embeddings.
 Required Inputs:
 + read_path: path to the input file containing alpha chain TCR data.
 + save_path: path to save the output embeddings in .npy format.
@@ -161,7 +161,7 @@ get_alphastru_emb(
 ```
 ### Obtain the epitope embedding from T5
 Using the get_ep_emb in get_ep.py.
-The function get_ep_emb is used to generate contextualized sequence embeddings for epitope peptides using a pretrained ProtT5 encoder model. These embeddings capture rich semantic and biochemical information and are particularly useful in downstream tasks such as TCR–epitope binding prediction or immune repertoire modeling.
+The function get_ep_emb is used to generate contextualized sequence embeddings for epitope peptides using a pretrained ProtT5 encoder model. 
 Required Inputs:
 + eps_data: A list or NumPy array of peptide sequences (strings) representing epitopes.
 + pretrain_path: Path to the local directory containing the pretrained ProtT5 model files.
@@ -190,15 +190,52 @@ print(epitope_embeddings.shape)
 # Output shape: (4, L, D) where L is the sequence length (varies) and D is the embedding dim 
 ```
 
-## Tutorial
-We show how to pretrain TCRFormer in [pretrain/HowToPretrain.ipynb](./pretrain/HowToPretrain.ipynb). And You can also directly utilize the pre-trained models TCRFormer, IgFold, and T5 to extract TCR's sequence embedding, TCR's structural embedding, and epitope's embedding, respectively [get_embedding/test.ipynb](./get_embedding/test.ipynb). Once the relevant embedding have been extracted, you can proceed with downstream tasks [downstream task/predict/train/](./downstream_task/predict/train/), ultimately leading to the final prediction results [downstream task/predict/](./downstream_task/predict/).
+## Pretain TCRFormer
+Required Inputs:
++beta_data.npy: Encoded CDR3β amino acid sequences 
++beta_v_data.npy: V gene index labels 
++beta_d_data.npy: D gene index labels 
++beta_j_data.npy: J gene index labels 
 
-## Requirements
-To execute the code, make sure to install the required packages listed below.
-* python==3.8
-* torch>=1.8.0
-* scikit-learn==1.1.1
-* matplotlib==3.4.2
-* pandas==1.4.2
-* numpy==1.22.3
-* scanpy==1.9.1
+```
+model_save_path = '/data/tmp/model_with_adj_25.pt'       # Where to save the trained model
+loss_save_path  = '/data/tmp/other_loss/'                # Folder to store training loss metrics
+
+train(train_data, v_data, d_data, j_data, model_save_path, loss_save_path)
+```
+
+## Predict (downstream task)
+### Pan 
+```
+cd downstream task/predict
+
+python ./pan_epitope_single.py --epitope YVLTWIVGA --path /mnt/sdb/tyh/result/dier/pt/
+
+python ./pan_epitope_single.py --epitope HWFVTQRNFYEPQII --path '/mnt/sdb/tyh/result/dier/double/pt/' --datatype singleindouble
+
+```
+
+### Pan (double)
+python ./pan_epitope_double.py --epitope HWFVTQRNFYEPQII --path '/mnt/sdb/tyh/result/dier/double/pt/'
+### MIL (binary)
+python ./repertoire_cls_bin.py --dataname LUCA --path /mnt/sdb/tyh/result/disan/
+### MIL (multi)
+python ./repertoire_cls_mul.py --dataname mul_8 --path /mnt/sdb/tyh/result/disan/
+### specific
+python specific_epitope.py --epitope YVLTWIVGA --path /mnt/sdb/tyh/result/diyi/pt/
+## Train (downstream task)
+
+### Pan 
+python pan_epitope_single_train.py --beta_train_emb_path /mnt/sdc/tyh/TCRFormer/tmp/2/train_cdr3_emb.npy --ep_train_emb_path /mnt/sdc/tyh/TCRFormer/tmp/2/ep_train_emb.npy --train_health_tcr_emb_path /mnt/sdb/panepitope/raw_data/final_test/TCRFormer/train_data/health_tcr_emb.npy
+### Pan (double)
+python pan_epitope_double_train.py --beta_train_emb_path /mnt/sdc/tyh/TCRFormer/tmp/3/beta_train_emb.npy --alpha_train_emb_path /mnt/sdc/tyh/TCRFormer/tmp/3/alpha_train_emb.npy --ep_train_emb_path /mnt/sdc/tyh/TCRFormer/tmp/3/ep_train_emb.npy --train_labels_path  /mnt/sdc/tyh/TCRFormer/tmp/3/train.csv
+### MIL (binary)
+python repertoire_cls_bin_train.py --train_array_path /mnt/sdb/Covid19/LUCA/train_cdr3.npy --train_labels_path /mnt/sdb/Covid19/LUCA/train_labels.npy
+### MIL (multi)
+python repertoire_cls_mul_train.py --train_array_path /mnt/sdb/tyh/new_MIL/final_files/final_train_emb_d.npy --train_labels_path /mnt/sdb/tyh/new_MIL/final_files/train_label_d.npy
+### specific
+python specific_epitope_train.py --beta_train_emb_path ../../tmp_data/1/beta_train_emb.npy --beta_train_st_path ../../tmp_data/1/beta_train_st.npy --alpha_train_emb_path ../../tmp_data/1/alpha_train_emb.npy --alpha_train_st_path ../../tmp_data/1/alpha_train_st.npy --train_labels_path ../../tmp_data/1/train.csv
+
+
+
+
