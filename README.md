@@ -208,33 +208,48 @@ train(train_data, v_data, d_data, j_data, model_save_path, loss_save_path)
 ### Pan 
 ```
 cd downstream task/predict
-
 python ./pan_epitope_single.py --epitope YVLTWIVGA --path /mnt/sdb/tyh/result/dier/pt/
-
 python ./pan_epitope_single.py --epitope HWFVTQRNFYEPQII --path '/mnt/sdb/tyh/result/dier/double/pt/' --datatype singleindouble
-
+```
+### Pan (double)
+```
+python ./pan_epitope_double.py --epitope HWFVTQRNFYEPQII --path '/mnt/sdb/tyh/result/dier/double/pt/'
+```
+### MIL (binary)
+```
+python ./repertoire_cls_bin.py --dataname LUCA --path /mnt/sdb/tyh/result/disan/
+```
+### MIL (multi)
+```
+python ./repertoire_cls_mul.py --dataname mul_8 --path /mnt/sdb/tyh/result/disan/
+```
+### specific
+```
+python specific_epitope.py --epitope YVLTWIVGA --path /mnt/sdb/tyh/result/diyi/pt/
 ```
 
-### Pan (double)
-python ./pan_epitope_double.py --epitope HWFVTQRNFYEPQII --path '/mnt/sdb/tyh/result/dier/double/pt/'
-### MIL (binary)
-python ./repertoire_cls_bin.py --dataname LUCA --path /mnt/sdb/tyh/result/disan/
-### MIL (multi)
-python ./repertoire_cls_mul.py --dataname mul_8 --path /mnt/sdb/tyh/result/disan/
-### specific
-python specific_epitope.py --epitope YVLTWIVGA --path /mnt/sdb/tyh/result/diyi/pt/
 ## Train (downstream task)
-
 ### Pan 
-python pan_epitope_single_train.py --beta_train_emb_path /mnt/sdc/tyh/TCRFormer/tmp/2/train_cdr3_emb.npy --ep_train_emb_path /mnt/sdc/tyh/TCRFormer/tmp/2/ep_train_emb.npy --train_health_tcr_emb_path /mnt/sdb/panepitope/raw_data/final_test/TCRFormer/train_data/health_tcr_emb.npy
+```
+cd downstream task/predict/train
+python pan_epitope_single_train.py --beta_train_emb_path ../../tmp_data/2/train_cdr3_emb.npy --ep_train_emb_path ../../tmp_data/2/ep_train_emb.npy --train_health_tcr_emb_path ../../tmp_data/2/health_tcr_emb.npy
+```
 ### Pan (double)
-python pan_epitope_double_train.py --beta_train_emb_path /mnt/sdc/tyh/TCRFormer/tmp/3/beta_train_emb.npy --alpha_train_emb_path /mnt/sdc/tyh/TCRFormer/tmp/3/alpha_train_emb.npy --ep_train_emb_path /mnt/sdc/tyh/TCRFormer/tmp/3/ep_train_emb.npy --train_labels_path  /mnt/sdc/tyh/TCRFormer/tmp/3/train.csv
+```
+python pan_epitope_double_train.py --beta_train_emb_path ../../tmp_data/3/beta_train_emb.npy --alpha_train_emb_path ../../tmp_data/3/alpha_train_emb.npy --ep_train_emb_path ../../tmp_data/3/ep_train_emb.npy --train_labels_path ../../tmp_data/3/train.csv
+```
 ### MIL (binary)
-python repertoire_cls_bin_train.py --train_array_path /mnt/sdb/Covid19/LUCA/train_cdr3.npy --train_labels_path /mnt/sdb/Covid19/LUCA/train_labels.npy
+```
+python repertoire_cls_bin_train.py --train_array_path ../../tmp_data/4/train_cdr3.npy --train_labels_path ../../tmp_data/4/train_labels.npy
+```
 ### MIL (multi)
-python repertoire_cls_mul_train.py --train_array_path /mnt/sdb/tyh/new_MIL/final_files/final_train_emb_d.npy --train_labels_path /mnt/sdb/tyh/new_MIL/final_files/train_label_d.npy
+```
+python repertoire_cls_mul_train.py --train_array_path ../../tmp_data/5/train_emb.npy --train_labels_path ../../tmp_data/5/train_label.npy
+```
 ### specific
+```
 python specific_epitope_train.py --beta_train_emb_path ../../tmp_data/1/beta_train_emb.npy --beta_train_st_path ../../tmp_data/1/beta_train_st.npy --alpha_train_emb_path ../../tmp_data/1/alpha_train_emb.npy --alpha_train_st_path ../../tmp_data/1/alpha_train_st.npy --train_labels_path ../../tmp_data/1/train.csv
+```
 
 
 
