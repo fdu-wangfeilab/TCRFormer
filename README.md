@@ -192,10 +192,10 @@ print(epitope_embeddings.shape)
 
 ## Pretain TCRFormer
 Required Inputs:
-+beta_data.npy: Encoded CDR3β amino acid sequences 
-+beta_v_data.npy: V gene index labels 
-+beta_d_data.npy: D gene index labels 
-+beta_j_data.npy: J gene index labels 
++ beta_data.npy: Encoded CDR3β amino acid sequences 
++ beta_v_data.npy: V gene index labels 
++ beta_d_data.npy: D gene index labels 
++ beta_j_data.npy: J gene index labels 
 
 ```
 model_save_path = '/data/tmp/model_with_adj_25.pt'       # Where to save the trained model
