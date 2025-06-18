@@ -168,14 +168,6 @@ Required Inputs:
 + device: The device identifier to run the model on.
 Usage Example:
 ```
-get_alphastru_emb(
-    read_path='data/tcr_alpha_data.tsv',
-    save_path='output/alpha_structural_embeddings.npy',
-    cdr3_name='TRA_CDR3',
-    delimiter='\t',
-    padding_max_len=30
-)
-```
 # Assume you have a list of epitope sequences:
 epitope_list = [
     "FLPSDFFPSV", 
@@ -185,7 +177,7 @@ epitope_list = [
 ]
 
 # Path to local ProtT5 encoder model (downloaded beforehand)
-model_path = "/path/prot_t5_xl_half_uniref50-enc/"
+model_path = "/mnt/sdb/tyh/prot_t5_xl_half_uniref50-enc/"
 
 # Call the function
 epitope_embeddings = get_ep_emb(
@@ -193,6 +185,10 @@ epitope_embeddings = get_ep_emb(
     pretrain_path=model_path,
     device="cuda:0"
 )
+
+print(epitope_embeddings.shape)
+# Output shape: (4, L, D) where L is the sequence length (varies) and D is the embedding dim 
+```
 
 ## Tutorial
 We show how to pretrain TCRFormer in [pretrain/HowToPretrain.ipynb](./pretrain/HowToPretrain.ipynb). And You can also directly utilize the pre-trained models TCRFormer, IgFold, and T5 to extract TCR's sequence embedding, TCR's structural embedding, and epitope's embedding, respectively [get_embedding/test.ipynb](./get_embedding/test.ipynb). Once the relevant embedding have been extracted, you can proceed with downstream tasks [downstream task/predict/train/](./downstream_task/predict/train/), ultimately leading to the final prediction results [downstream task/predict/](./downstream_task/predict/).
