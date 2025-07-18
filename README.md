@@ -3,7 +3,7 @@ TCRFormer Learns Generalizable TCR Representations Across Epitopes and Immune Co
 ![framework](./model.jpg)
 
 ## Data Download Link
-
+The associated datasets can be accessed at https://zenodo.org/records/15954012 and https://zenodo.org/records/16038286.
 
 ## System requirements
 + TCRFormer need enough RAM and a NVIDIA GPU to support operations
